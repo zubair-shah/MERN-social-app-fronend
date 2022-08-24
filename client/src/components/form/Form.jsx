@@ -70,7 +70,7 @@ function Form() {
         <div className={classes.fileInput}>
           <FileBase
             type="file"
-            multiple="false"
+            multiple={false}
             onDone={({ base64 }) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
