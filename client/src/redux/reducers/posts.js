@@ -1,8 +1,8 @@
 export default (posts = [], action) => {
   switch (action.type) {
     case "FETCH_ALL":
-      console.log([...posts , action.payload]);
-      return [action.payload];
+      // console.log([...posts , action.payload]);
+      return action.payload;
     case "CREATE":
       return [...posts, action.payload];
 
