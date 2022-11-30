@@ -3,9 +3,10 @@ import useStyles from "./styles";
 import { Typography, TextField, Paper, Button } from "@mui/material";
 import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
-import { createPost } from "../../redux/actions/posts";
+import { createPost, updatePost } from "../../redux/actions/posts";
+function Form({ currentId, setCurrentId }) {
+  // console.log(currentId, setCurrentId);
 
-function Form() {
   const [postData, setPostData] = useState({
     creator: " ",
     title: " ",
@@ -15,12 +16,26 @@ function Form() {
   });
   const classes = useStyles();
   const dispatch = useDispatch();
+  console.log(postData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
+    if (currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
+    clear()
   };
-  const clear = () => {};
+  const clear = () => {
+    setPostData({
+      creator: " ",
+      title: " ",
+      message: " ",
+      tags: " ",
+      selectedFile: null
+    });
+  };
 
   return (
     <Paper className={classes.paper}>

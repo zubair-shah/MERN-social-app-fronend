@@ -49,4 +49,7 @@ export default makeStyles({
     display: "flex",
     justifyContent: "space-between",
   },
+  mx5: {
+    margin: "0px 5px",
+  },
 });

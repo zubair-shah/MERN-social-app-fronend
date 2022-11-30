@@ -5,7 +5,7 @@ export default makeStyles(() => ({
     borderRadius: 15,
     margin: "30px 0",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row !important",
     justifyContent: "center",
     alignItems: "center",
   },
