@@ -23,6 +23,7 @@ function Users() {
               justifyContent="space-between"
               alignItems="stretch"
             >
+              
               <Grid item xs={12} sm={12} md={12}>
                 <Posts setCurrentId={setCurrentId} />
               </Grid>
