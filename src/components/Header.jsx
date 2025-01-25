@@ -12,6 +12,8 @@ function Header() {
       <Container maxWidth="lg">
         <AppBar className={classes.appBar} position="static" color="inherit">
           <Grid sm={12}>
+            <Link to="/">
+
             <Typography className={classes.heading} variant="h2" align="center">
               Memories
               <img
@@ -20,7 +22,8 @@ function Header() {
                 className={classes.image}
                 height={60}
               />
-            </Typography>
+              </Typography>
+            </Link>
           </Grid>
 
           {/* <Grid container> */}

@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { Message } from "../../components";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 import { useContext } from "react";
 
@@ -25,7 +25,8 @@ const validationSchema = yup.object({
 
 function Login() {
   const [messageBar, setMessageBar] = useState("");
-  const dev = "http://localhost:2000";
+  const navigate = useNavigate()
+  const dev = "http://localhost:5000";
   const baseURL =
     window.location.hostname.split(":")[0] === "localhost" ? dev : "";
   const formik = useFormik({
@@ -53,14 +54,14 @@ function Login() {
             //   },
             // });
             //message
-            setMessageBar(true);
+            setMessageBar("success");
             setTimeout(() => {
-              history.push("/dashboard");
+              navigate("/admin");
               setMessageBar([]);
             }, 1000);
           } else {
             // console.log("Email or password is invalid");
-            setMessageBar(false);
+            setMessageBar("error");
             setTimeout(() => {
               setMessageBar([]);
             }, 1000);
@@ -72,8 +73,8 @@ function Login() {
   const history = useLocation();
   return (
     <>
-      {messageBar === true ? <Message type="success" message="Welcome" /> : ""}
-      {messageBar === false ? (
+      {messageBar === "success" ? <Message type="success" message="Welcome" /> : ""}
+      {messageBar === "error" ? (
         <Message type="error" message="Invalid email or password" />
       ) : (
         ""

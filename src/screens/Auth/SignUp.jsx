@@ -14,7 +14,8 @@ import * as yup from "yup";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Message } from "../../components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import apis from "../../api";
 
 const validationSchema = yup.object({
   fullName: yup
@@ -44,7 +45,23 @@ const validationSchema = yup.object({
 function Signup() {
   const history = useLocation();
   const [messageBar, setMessageBar] = useState("");
-  const dev = "http://localhost:2000";
+  const [data, setData] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    address: "",
+  });
+  const navigate = useNavigate()
+  const onchangeHandler = (event) => {
+    let value = event.target.value;
+    setData({
+      ...data,
+      [event.target.name]: value,
+    });
+  };
+  console.log(data);
+  const dev = "http://localhost:5000";
   const baseURL =
     window.location.hostname.split(":")[0] === "localhost" ? dev : "";
   const formik = useFormik({
@@ -56,52 +73,58 @@ function Signup() {
       address: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      const genderValue = document.querySelector(
-        'input[name="gender"]:checked'
-      ).value;
-      axios
-        .post(`${baseURL}/api/v1/signupuser`, {
-          fullName: values.fullName,
-          email: values.email,
-          gender: genderValue,
-          phoneNumber: Number(values.phoneNumber),
-          password: values.password,
-          address: values.address,
-        })
-        .then((result) => {
-          if (result.data === "user created") {
-            //message
-            setMessageBar(true);
-            setTimeout(() => {
-              history.push("/login");
-              setMessageBar("");
-            }, 1000);
-          }
-        })
-        .catch((err) => {
-          // console.log(err);
-        });
-    },
   });
 
-  useEffect(() => {
-    axios.get(`${baseURL}/api/v1/signupuser`).then((res) => {
-      // console.log(res);
-    });
-    // eslint-disable-next-line
-  }, []);
+  const onSubmit = (e) => {
+    e.preventDefault()
+    const genderValue = document.querySelector(
+      'input[name="gender"]:checked'
+    ).value;
+    console.log(`onSubmit`, apis)
+    console.log(`onSubmit`, data)
+    apis.createUser(data)
+      .then((result) => {
+        console.log(result)
+        if (result.status === 201) {
+        //message
+          setMessageBar("success");
+          setTimeout(() => {
+            navigate("/login");
+            setMessageBar("");
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        setMessageBar("error");
+        setTimeout(() => {
+          setMessageBar("");
+        }, 1000);
+        console.log(err);
+      });
+  };
+
+  // useEffect(() => {
+  //   axios.get(`${baseURL}/api/v1/signupuser`).then((res) => {
+  //     // console.log(res);
+  //   });
+  //   // eslint-disable-next-line
+  // }, []);
 
   return (
     <div>
-      {messageBar === true ? (
+      {messageBar === "success" ? (
         <Message
           type="success"
           message="Welcome! Successfully account created"
         />
-      ) : (
-        ""
-      )}
+      ) : ""}
+
+      {messageBar === "error" ? (
+        <Message
+          type="error"
+          message="Invalid Credentials"
+        />
+      ) : ''}
       <div className="mainParentSign">
         <div className="parentChildSign">
           <div className="loginHeadingSign">
@@ -118,7 +141,7 @@ function Signup() {
             noValidate
             autoComplete="off"
             // textAlign="center"
-            onSubmit={formik.handleSubmit}
+            onSubmit={onSubmit}
           >
             <TextField
               fullWidth
@@ -126,9 +149,9 @@ function Signup() {
               label="Full Name"
               variant="outlined"
               placeholder="Enter Your Name"
-              value={formik.values.fullName}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              value={data.fullName}
+              onChange={onchangeHandler}
+              onBlur={onchangeHandler}
               error={formik.touched.fullName && Boolean(formik.errors.fullName)}
               helperText={formik.touched.fullName && formik.errors.fullName}
               style={{ marginBottom: "10px" }}
@@ -140,8 +163,9 @@ function Signup() {
               label="Email"
               variant="outlined"
               placeholder="Enter your Email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
+              value={data.email}
+              onChange={onchangeHandler}
+              onBlur={onchangeHandler}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               style={{ marginBottom: "10px" }}
@@ -176,8 +200,9 @@ function Signup() {
               label="Phone Number"
               variant="outlined"
               placeholder="Enter Phone Number"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
+              value={data.phoneNumber}
+              onChange={onchangeHandler}
+              onBlur={onchangeHandler}
               error={
                 formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
               }
@@ -193,8 +218,9 @@ function Signup() {
               label="Password"
               variant="outlined"
               placeholder="Enter Password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
+              value={data.password}
+              onChange={onchangeHandler}
+              onBlur={onchangeHandler}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
               style={{ marginBottom: "10px" }}
@@ -206,8 +232,9 @@ function Signup() {
               label="Address"
               variant="outlined"
               placeholder="Type Your address"
-              value={formik.values.address}
-              onChange={formik.handleChange}
+              value={data.address}
+              onChange={onchangeHandler}
+              onBlur={onchangeHandler}
               error={formik.touched.address && Boolean(formik.errors.address)}
               helperText={formik.touched.address && formik.errors.address}
               style={{ marginBottom: "10px" }}
@@ -221,6 +248,7 @@ function Signup() {
                 backgroundColor: "rgba(0,183,255, 1)",
                 marginBottom: "15px",
               }}
+              // onClick={onSubmit}
             >
               Submit
             </Button>

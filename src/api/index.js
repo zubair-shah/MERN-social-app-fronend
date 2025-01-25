@@ -18,14 +18,14 @@ const createBackendServer = (baseURL) => {
 
   const fetchPost = async () => api.get("/posts");
   /*==========    POST REQUESTS    ==========*/
+ const createUser = async (data) => api.post("/api/v1/createuser", data);
+ const createPost = async (newPost) => api.post("/posts", newPost);
+ /*==========    DELETE REQUESTS    ==========*/
+ const deletePost = (id, updatedPost) => api.delete(`posts/${id}`);
+ /*==========    PUT REQUESTS    ==========*/
+ const updatePost = (id, updatedPost) => api.patch(`posts/${id}`, updatedPost);
 
-  const createPost = async (newPost) => api.post("/posts", newPost);
-  /*==========    DELETE REQUESTS    ==========*/
-  const deletePost = (id, updatedPost) => api.delete(`posts/${id}`);
-  /*==========    PUT REQUESTS    ==========*/
-  const updatePost = (id, updatedPost) => api.patch(`posts/${id}`, updatedPost);
-
-  return { updatePost, createPost, fetchPost, deletePost };
+ return { updatePost, createPost, fetchPost, deletePost, createUser };
 };
 const SERVER_URL = process.env.REACT_APP_API_BASE_URL;
 // const SERVER_URL = process.env.REACT_APP_API_Production_BASE_URL;
